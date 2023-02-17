@@ -72,6 +72,8 @@ async function processFile(filePath: string) {
     // Replace backslashes with forward slashes
     remotePath = remotePath.replace(/\\/g, "/");
 
+    remotePath = (process.env.FOLDER_PREFIX || "") + "/" + remotePath;
+
     console.log(`Remote path: ${remotePath}`);
 
     // Upload the file to the bucket with the same folder structure as on disk
