@@ -51,8 +51,31 @@ async function processFile(filePath: string) {
   console.log(`Processing file: ${filePath}`);
 
   try {
-    // Upload the file to the bucket
-    const file = await bucket.upload(filePath);
+    const stats = await fs.promises.stat(filePath);
+
+    if (!stats.isFile()) {
+      console.log(`Skipping folder ${filePath} - it's a directory`);
+      return;
+    }
+    // Calculate the relative path of the file with respect to the folderPath
+    const relativePath = filePath
+      .replace(folderPath, "")
+      .replace(/\\/g, "/")
+      .replace(/^\//, "");
+
+    // Calculate the remote path in the bucket based on the local file path
+    let remotePath = path.join(
+      path.dirname(relativePath),
+      path.basename(filePath)
+    );
+
+    // Replace backslashes with forward slashes
+    remotePath = remotePath.replace(/\\/g, "/");
+
+    console.log(`Remote path: ${remotePath}`);
+
+    // Upload the file to the bucket with the same folder structure as on disk
+    const file = await bucket.upload(filePath, { destination: remotePath });
 
     // Add the file to the set of uploaded files
     uploadedFiles.add(filePath);
