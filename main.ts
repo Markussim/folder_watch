@@ -42,7 +42,7 @@ chokidar
   });
 
 async function processFile(filePath: string) {
-  if (uploadedFiles.has(filePath)) {
+  if (uploadedFiles.has(filePath) && !(process.env.FORCE_UPLOAD == "true")) {
     // The file has already been uploaded
     console.log(`Skipping file ${filePath} - already uploaded to bucket`);
     return;
