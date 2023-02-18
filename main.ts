@@ -48,6 +48,12 @@ async function processFile(filePath: string) {
     return;
   }
 
+  // If the file ends with .tmp, skip it
+  if (filePath.endsWith(".tmp")) {
+    console.log(`Skipping file ${filePath} - temporary file`);
+    return;
+  }
+
   console.log(`Processing file: ${filePath}`);
 
   try {
